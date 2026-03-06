@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Colegio El Manglar</title>
+    
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Contenedor principal (mobile) -->
+    <div class="mobile-container">
+        
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="avatar">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23E3F2FD'/%3E%3Ctext x='50' y='55' font-size='40' text-anchor='middle' fill='%234CAF50' font-family='Inter'%3E👤%3C/text%3E%3C/svg%3E" alt="Avatar">
+                    </div>
+                    <div class="greeting">
+                        <span class="greeting-large">¡Hola, Estudiante!</span>
+                        <span class="greeting-small">Colegio El Manglar</span>
+                    </div>
+                </div>
+                <button class="notification-btn" aria-label="Notificaciones">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Saldo Actual Card -->
+            <section class="balance-card">
+                <div class="balance-header">
+                    <span class="balance-title">TU SALDO ACTUAL</span>
+                </div>
+                <div class="balance-body">
+                    <div class="balance-amount">
+                        <span class="amount-number">1,250</span>
+                        <span class="amount-unit">MANGLE COINS</span>
+                    </div>
+                </div>
+                <div class="balance-actions">
+                    <button class="btn btn-outline">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Historial
+                    </button>
+                    <button class="btn btn-outline">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="16 12 12 8 8 12"/>
+                            <line x1="12" y1="16" x2="12" y2="8"/>
+                        </svg>
+                        Canjear
+                    </button>
+                </div>
+            </section>
+
+            <!-- Actividades Disponibles -->
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Actividades Disponibles</h2>
+                    <a href="#" class="link-view-all">Ver todas</a>
+                </div>
+
+                <!-- Actividad 1: Limpieza de Áreas Verdes -->
+                <div class="activity-card">
+                    <div class="activity-image cleanup">
+                        <div class="reward-badge">+50 MC</div>
+                        <div class="activity-illustration">
+                            <svg width="80" height="80" viewBox="0 0 100 100" fill="none">
+                                <circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.3)"/>
+                                <rect x="35" y="45" width="30" height="35" rx="4" fill="white" opacity="0.9"/>
+                                <circle cx="50" cy="35" r="12" fill="white" opacity="0.9"/>
+                                <path d="M45 55L50 60L55 50" stroke="#4CAF50" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="activity-content">
+                        <h3 class="activity-title">Limpieza de Áreas Verdes</h3>
+                        <p class="activity-description">Ayuda a mantener limpias las áreas verdes del colegio y gana puntos.</p>
+                        <div class="activity-slots">
+                            <span class="slots-label">CUPO</span>
+                            <span class="slots-value">4 / 10 personas</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 40%;"></div>
+                        </div>
+                        <button class="btn btn-participate">Participar</button>
+                    </div>
+                </div>
+
+                <!-- Actividad 2: Tutoría entre Pares -->
+                <div class="activity-card">
+                    <div class="activity-image tutoring">
+                        <div class="reward-badge">+30 MC</div>
+                        <div class="activity-illustration">
+                            <svg width="80" height="80" viewBox="0 0 100 100" fill="none">
+                                <circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.3)"/>
+                                <rect x="30" y="40" width="40" height="30" rx="4" fill="white" opacity="0.9"/>
+                                <line x1="40" y1="50" x2="60" y2="50" stroke="#4CAF50" stroke-width="2"/>
+                                <line x1="40" y1="55" x2="55" y2="55" stroke="#4CAF50" stroke-width="2"/>
+                                <line x1="40" y1="60" x2="58" y2="60" stroke="#4CAF50" stroke-width="2"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="activity-content">
+                        <h3 class="activity-title">Tutoría entre Pares</h3>
+                        <p class="activity-description">Apoya a compañeros que necesitan ayuda en materias específicas.</p>
+                        <div class="activity-slots">
+                            <span class="slots-label">CUPO</span>
+                            <span class="slots-value">7 / 15 personas</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 47%;"></div>
+                        </div>
+                        <button class="btn btn-participate">Participar</button>
+                    </div>
+                </div>
+
+                <!-- Actividad 3: Recogida de PET -->
+                <div class="activity-card">
+                    <div class="activity-image recycling">
+                        <div class="reward-badge">+75 MC</div>
+                        <div class="activity-illustration">
+                            <svg width="80" height="80" viewBox="0 0 100 100" fill="none">
+                                <circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.3)"/>
+                                <!-- Mano -->
+                                <path d="M45 65L50 50L55 65" stroke="#4CAF50" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                <circle cx="50" cy="45" r="8" fill="#4CAF50"/>
+                                <!-- Bombilla -->
+                                <path d="M50 25C45 25 42 28 42 32C42 35 44 37 46 38L46 42L54 42L54 38C56 37 58 35 58 32C58 28 55 25 50 25Z" fill="#FFD700"/>
+                                <line x1="50" y1="42" x2="50" y2="48" stroke="#FFD700" stroke-width="2"/>
+                                <!-- Símbolo reciclaje -->
+                                <path d="M62 55L66 50L70 55" stroke="#4CAF50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                <path d="M64 52L66 50L68 52" stroke="#4CAF50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="activity-content">
+                        <h3 class="activity-title">Recogida de PET</h3>
+                        <p class="activity-description">Participa en la recolección de botellas plásticas para reciclar.</p>
+                        <div class="activity-slots">
+                            <span class="slots-label">CUPO</span>
+                            <span class="slots-value">2 / 8 personas</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 25%;"></div>
+                        </div>
+                        <button class="btn btn-participate">Participar</button>
+                    </div>
+                </div>
+
+                <!-- Espacio para el footer -->
+                <div class="bottom-spacer"></div>
+            </section>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span>INICIO</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="9" cy="21" r="1"/>
+                    <circle cx="20" cy="21" r="1"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                </svg>
+                <span>TIENDA</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 11 12 14 22 4"/>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                </svg>
+                <span>TAREAS</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>PERFIL</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/app.js"></script>
+</body>
+</html>
