@@ -1,44 +1,25 @@
-# 🌿 Proyecto Manglar Dos
+# Proyecto Manglar Dos
 
-Nuevo proyecto para desarrollo web.
+Repositorio para el segundo proyecto de la serie Manglar.
 
----
+## Descripción
+Este repositorio está listo para alojar el próximo proyecto web o aplicación.
 
-## 🚀 **Descripción**
-
-Este es un repositorio nuevo creado para el siguiente proyecto de desarrollo.
-
----
-
-## 📋 **Estructura**
-
+## Estructura
 ```
 proyecto-manglar-dos/
 ├── README.md          # Este archivo
-└── (archivos futuros)
+├── .gitignore         # Archivos a ignorar
+└── (otros archivos)   # Por definir
 ```
 
----
+## Uso
+1. Clonar el repositorio
+2. Agregar archivos según el proyecto
+3. Commit y push
 
-## 🛠️ **Instalación**
+## Autor
+- GitHub: [@Toyoenohio](https://github.com/Toyoenohio)
 
-```bash
-git clone https://github.com/Toyoenohio/proyecto-manglar-dos.git
-cd proyecto-manglar-dos
-```
-
----
-
-## 📄 **Licencia**
-
+## Licencia
 Código abierto.
-
----
-
-## 👨‍💻 **Autor**
-
-- **GitHub:** [@Toyoenohio](https://github.com/Toyoenohio)
-
----
-
-**Creado: 2026-03-06**

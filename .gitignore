@@ -1,0 +1,25 @@
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Editores de código
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dependencias
+node_modules/
+package-lock.json
+
+# Build
+dist/
+build/
+
+# Archivos temporales
+tmp/
+temp/
