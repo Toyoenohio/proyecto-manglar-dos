@@ -108,13 +108,13 @@ function sortProducts(productos, sortBy) {
             case 'price-high':
                 return precioB - precioA;
             case 'popular':
-                const popularA = parseInt(a.popularidad) || 0;
-                const popularB = parseInt(b.popularidad) || 0;
-                return popularB - popularA;
+                // Usar etiqueta_destacada como indicador de popularidad
+                const destacadoA = a.etiqueta_destacada === 'NUEVO' ? 1 : 0;
+                const destacadoB = b.etiqueta_destacada === 'NUEVO' ? 1 : 0;
+                return destacadoB - destacadoA;
             case 'new':
-                const fechaA = new Date(a.fecha_creacion || 0);
-                const fechaB = new Date(b.fecha_creacion || 0);
-                return fechaB - fechaA;
+                // Ordenar por ID (asumiendo que IDs más altos son más nuevos)
+                return parseInt(b.id) - parseInt(a.id);
             default:
                 return 0;
         }
@@ -174,6 +174,23 @@ function renderProducts(productos) {
 }
 
 /**
+ * Obtener descripción del producto
+ */
+function getProductDescription(producto) {
+    if (producto.descripcion) return producto.descripcion;
+    
+    // Descripciones por categoría
+    const descriptions = {
+        'Académico': 'Beneficio académico especial',
+        'Cafetería': 'Producto de la cafetería escolar',
+        'Eventos': 'Acceso a eventos escolares',
+        'Merchandising': 'Artículo del colegio'
+    };
+    
+    return descriptions[producto.categoria] || 'Recompensa disponible';
+}
+
+/**
  * Crear card de producto
  */
 function createProductCard(producto) {
@@ -194,11 +211,11 @@ function createProductCard(producto) {
             </div>
         </div>
         <div class="product-content">
-            <h3 class="product-title">${producto.nombre}</h3>
-            <p class="product-description">${producto.descripcion || 'Sin descripción'}</p>
+            <h3 class="product-title">${producto.titulo || 'Producto'}</h3>
+            <p class="product-description">${getProductDescription(producto)}</p>
             <div class="product-footer">
                 <div class="product-price">
-                    ${producto.precio_mc}<span>MC</span>
+                    ${producto.precio_mc || 0}<span>MC</span>
                 </div>
                 <button class="buy-btn" data-product="${producto.id}">
                     Canjear

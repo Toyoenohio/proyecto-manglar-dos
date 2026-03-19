@@ -6,12 +6,12 @@
  */
 
 const Database = {
-    // URLs de las hojas de cálculo publicadas (actualizar con tus URLs reales)
+    // URLs de las hojas de cálculo publicadas
     urls: {
-        usuarios: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQP3HRn9UADHnnQkckKluEg7jObX46PBAe7ucPUJh8hicSqChAUHouWbJXjo3S0MAorIxOy01dVwSs/pub?gid=1857824058&single=true&output=csv',
-        actividades: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQP3HRn9UADHnnQkckKluEg7jObX46PBAe7ucPUJh8hicSqChAUHouWbJXjo3S0MAorIxOy01dVwSs/pub?gid=0&single=true&output=csv',
-        recompensas: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQP3HRn9UADHnnQkckKluEg7jObX46PBAe7ucPUJh8hicSqChAUHouWbJXjo3S0MAorIxOy01dVwSs/pub?output=csv',
-        transacciones: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQP3HRn9UADHnnQkckKluEg7jObX46PBAe7ucPUJh8hicSqChAUHouWbJXjo3S0MAorIxOy01dVwSs/pub?output=csv'
+        usuarios: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRhm0xLYGNaT99RSm5GuOUyjEgK0u22CGgFAl7XBbxxNtX6VRpeY6BIwarRpAJJ1JsYICtXVGIFI4q0/pub?gid=0&single=true&output=csv',
+        actividades: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRhm0xLYGNaT99RSm5GuOUyjEgK0u22CGgFAl7XBbxxNtX6VRpeY6BIwarRpAJJ1JsYICtXVGIFI4q0/pub?gid=25137443&single=true&output=csv',
+        recompensas: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRhm0xLYGNaT99RSm5GuOUyjEgK0u22CGgFAl7XBbxxNtX6VRpeY6BIwarRpAJJ1JsYICtXVGIFI4q0/pub?gid=1535249940&single=true&output=csv',
+        transacciones: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRhm0xLYGNaT99RSm5GuOUyjEgK0u22CGgFAl7XBbxxNtX6VRpeY6BIwarRpAJJ1JsYICtXVGIFI4q0/pub?output=csv'
     },
     
     // Cache de datos
@@ -169,8 +169,8 @@ const Database = {
     async getActividadesDisponibles() {
         const actividades = await this.getActividades();
         return actividades.filter(a => 
-            a.estado === 'Disponible' && 
-            (a.cupo_actual < a.cupo_maximo || !a.cupo_maximo)
+            a.estado === 'CONVOCATORIA ABIERTA' && 
+            (parseInt(a.cupo_inscritos) < parseInt(a.cupo_total) || !a.cupo_total)
         );
     },
     
@@ -194,10 +194,8 @@ const Database = {
      */
     async getRecompensasDisponibles() {
         const recompensas = await this.getRecompensas();
-        return recompensas.filter(r => 
-            r.estado === 'Disponible' && 
-            (r.stock_actual > 0 || !r.stock_maximo)
-        );
+        // Asumimos que todas las recompensas están disponibles si no hay columna estado
+        return recompensas;
     },
     
     /**
@@ -212,16 +210,30 @@ const Database = {
      * Calcular saldo de un usuario
      */
     async calcularSaldoUsuario(usuarioId) {
-        const transacciones = await this.getTransaccionesUsuario(usuarioId);
-        
-        if (transacciones.length === 0) {
+        try {
+            // Primero intentar obtener saldo directo de la tabla usuarios
+            const usuarios = await this.getUsuarios();
+            const usuario = usuarios.find(u => u.id == usuarioId);
+            
+            if (usuario && usuario.saldo_mc !== undefined) {
+                return parseFloat(usuario.saldo_mc) || 0;
+            }
+            
+            // Fallback: calcular desde transacciones
+            const transacciones = await this.getTransaccionesUsuario(usuarioId);
+            
+            if (transacciones.length === 0) {
+                return 0;
+            }
+            
+            return transacciones.reduce((saldo, t) => {
+                const monto = parseFloat(t.monto) || 0;
+                return t.tipo === 'ganancia' ? saldo + monto : saldo - monto;
+            }, 0);
+        } catch (error) {
+            console.error('Error calculando saldo:', error);
             return 0;
         }
-        
-        return transacciones.reduce((saldo, t) => {
-            const monto = parseFloat(t.monto) || 0;
-            return t.tipo === 'ganancia' ? saldo + monto : saldo - monto;
-        }, 0);
     },
     
     /**
