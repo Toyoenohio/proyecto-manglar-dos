@@ -109,7 +109,44 @@
     display: block;
 }
 
-/* Stats Grid */
+/* Balance Stats - Horizontal Layout */
+.balance-stats {
+    display: flex;
+    gap: 5px;
+    margin-top: var(--space-4);
+    justify-content: space-between;
+}
+
+.balance-stats .stat-item {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: var(--space-3);
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-gray-100);
+    flex: 1;
+    min-width: 0; /* Permite que los items se ajusten */
+}
+
+.balance-stats .stat-label {
+    font-size: 11px;
+    color: var(--color-gray-500);
+    font-weight: 500;
+    display: block;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.balance-stats .stat-value {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-dark);
+    line-height: 1.2;
+}
+
+/* Stats Grid (para otras secciones si las hubiera) */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
