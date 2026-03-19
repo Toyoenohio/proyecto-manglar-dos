@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Detalle Actividad - Mangle Coins</title>
+    <link rel="stylesheet" href="css/styles.css?v=2">
+    <link rel="stylesheet" href="css/detalle-actividad.css?v=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/database.js" defer></script>
+    <script src="js/auth.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <script src="js/detalle-actividad.js" defer></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <button class="back-btn" onclick="window.history.back()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h1 class="page-title">Detalle Actividad</h1>
+                <div class="header-actions">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Hero Section -->
+            <div class="activity-hero" id="activityHero">
+                <div class="hero-content">
+                    <div class="activity-badge" id="activityBadge">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h1 class="activity-title" id="activityTitle">Cargando...</h1>
+                    <div class="activity-reward" id="activityReward">
+                        <span class="reward-amount">+0 MC</span>
+                        <span class="reward-label">Recompensa</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Details -->
+            <div class="activity-details">
+                <!-- Description Card -->
+                <div class="detail-card">
+                    <div class="card-header">
+                        <i class="fas fa-align-left"></i>
+                        <h3>Descripción</h3>
+                    </div>
+                    <div class="card-content">
+                        <p class="activity-description" id="activityDescription">Cargando descripción...</p>
+                    </div>
+                </div>
+
+                <!-- Requirements Card -->
+                <div class="detail-card">
+                    <div class="card-header">
+                        <i class="fas fa-clipboard-check"></i>
+                        <h3>Requisitos</h3>
+                    </div>
+                    <div class="card-content">
+                        <ul class="requirements-list" id="requirementsList">
+                            <li>Cargando requisitos...</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Schedule Card -->
+                <div class="detail-card">
+                    <div class="card-header">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h3>Horario</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="schedule-info">
+                            <div class="schedule-item">
+                                <span class="schedule-label">
+                                    <i class="fas fa-clock"></i>
+                                    Fecha:
+                                </span>
+                                <span class="schedule-value" id="activityDate">Cargando...</span>
+                            </div>
+                            <div class="schedule-item">
+                                <span class="schedule-label">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Lugar:
+                                </span>
+                                <span class="schedule-value" id="activityLocation">Cargando...</span>
+                            </div>
+                            <div class="schedule-item">
+                                <span class="schedule-label">
+                                    <i class="fas fa-user-friends"></i>
+                                    Cupo:
+                                </span>
+                                <span class="schedule-value" id="activitySlots">Cargando...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Card -->
+                <div class="detail-card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Progreso</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="progress-stats">
+                            <div class="progress-item">
+                                <span class="progress-label">Participantes</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="participantsProgress" style="width: 0%"></div>
+                                </div>
+                                <span class="progress-value" id="participantsText">0/0</span>
+                            </div>
+                            <div class="progress-item">
+                                <span class="progress-label">Tiempo restante</span>
+                                <div class="countdown-timer" id="countdownTimer">
+                                    <span class="countdown-days">--</span>d
+                                    <span class="countdown-hours">--</span>h
+                                    <span class="countdown-minutes">--</span>m
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Organizer Card -->
+                <div class="detail-card">
+                    <div class="card-header">
+                        <i class="fas fa-user-tie"></i>
+                        <h3>Organizador</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="organizer-info">
+                            <div class="organizer-avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="organizer-details">
+                                <h4 class="organizer-name" id="organizerName">Cargando...</h4>
+                                <p class="organizer-role" id="organizerRole">Profesor</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="action-section">
+                <button class="btn btn-primary btn-block btn-lg" id="participateBtn">
+                    <i class="fas fa-check-circle"></i>
+                    Participar en esta actividad
+                </button>
+                <p class="action-note">
+                    <i class="fas fa-info-circle"></i>
+                    Al participar, aceptás los términos y condiciones de la actividad.
+                </p>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="/" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>INICIO</span>
+            </a>
+            <a href="/tienda" class="nav-item">
+                <i class="fas fa-store"></i>
+                <span>TIENDA</span>
+            </a>
+            <a href="/tareas" class="nav-item">
+                <i class="fas fa-tasks"></i>
+                <span>TAREAS</span>
+            </a>
+            <a href="/perfil" class="nav-item active">
+                <i class="fas fa-user"></i>
+                <span>PERFIL</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Perfil - Mangle Coins</title>
+    <link rel="stylesheet" href="css/styles.css?v=2">
+    <link rel="stylesheet" href="css/perfil.css?v=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <button class="back-btn" onclick="window.history.back()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h1 class="page-title">Mi Perfil</h1>
+                <div class="header-actions">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <div class="avatar-circle">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="avatar-badge">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                </div>
+                <div class="profile-info">
+                    <h2 class="profile-name" id="profileName">Cargando...</h2>
+                    <p class="profile-email" id="profileEmail">cargando@ejemplo.com</p>
+                    <div class="profile-rank">
+                        <span class="rank-badge">Nivel 1</span>
+                        <span class="rank-progress">
+                            <span class="progress-bar">
+                                <span class="progress-fill" style="width: 25%"></span>
+                            </span>
+                            <span class="progress-text">25%</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Balance Card -->
+            <div class="profile-balance">
+                <div class="balance-card">
+                    <div class="balance-info">
+                        <span class="balance-label">TUS MANGLE COINS</span>
+                        <div class="balance-amount">
+                            <span class="amount-number" id="profileBalance">0</span>
+                            <span class="currency">MC</span>
+                        </div>
+                    </div>
+                    <div class="balance-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Ganados</span>
+                            <span class="stat-value" id="earnedTotal">0 MC</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Gastados</span>
+                            <span class="stat-value" id="spentTotal">0 MC</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Disponibles</span>
+                            <span class="stat-value" id="availableBalance">0 MC</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Sections -->
+            <div class="profile-sections">
+                <!-- Achievements -->
+                <section class="profile-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <i class="fas fa-trophy"></i>
+                            Logros
+                        </h3>
+                        <a href="#" class="see-all">Ver todos</a>
+                    </div>
+                    <div class="achievements-grid">
+                        <div class="achievement-card">
+                            <div class="achievement-icon unlocked">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="achievement-name">Primeros Pasos</span>
+                        </div>
+                        <div class="achievement-card">
+                            <div class="achievement-icon locked">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <span class="achievement-name">Colaborador</span>
+                        </div>
+                        <div class="achievement-card">
+                            <div class="achievement-icon locked">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <span class="achievement-name">Rápido</span>
+                        </div>
+                        <div class="achievement-card">
+                            <div class="achievement-icon locked">
+                                <i class="fas fa-gem"></i>
+                            </div>
+                            <span class="achievement-name">Coleccionista</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Activity History -->
+                <section class="profile-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <i class="fas fa-history"></i>
+                            Actividad Reciente
+                        </h3>
+                        <a href="#" class="see-all">Ver historial</a>
+                    </div>
+                    <div class="activity-list" id="activityList">
+                        <!-- Actividad cargada dinámicamente -->
+                        <div class="empty-state small">
+                            <p>No hay actividad reciente</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings -->
+                <section class="profile-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <i class="fas fa-cog"></i>
+                            Configuración
+                        </h3>
+                    </div>
+                    <div class="settings-list">
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon">
+                                <i class="fas fa-user-edit"></i>
+                            </div>
+                            <div class="settings-content">
+                                <span class="settings-title">Editar Perfil</span>
+                                <span class="settings-subtitle">Actualiza tu información</span>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <div class="settings-content">
+                                <span class="settings-title">Notificaciones</span>
+                                <span class="settings-subtitle">Configura alertas</span>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="settings-content">
+                                <span class="settings-title">Privacidad</span>
+                                <span class="settings-subtitle">Controla tu información</span>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        <a href="#" class="settings-item">
+                            <div class="settings-icon">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <div class="settings-content">
+                                <span class="settings-title">Ayuda</span>
+                                <span class="settings-subtitle">Centro de ayuda</span>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="/" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </a>
+            <a href="/tienda" class="nav-item">
+                <i class="fas fa-store"></i>
+                <span>Tienda</span>
+            </a>
+            <a href="/tareas" class="nav-item">
+                <i class="fas fa-tasks"></i>
+                <span>Tareas</span>
+            </a>
+            <a href="/perfil" class="nav-item active">
+                <i class="fas fa-user"></i>
+                <span>Perfil</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Logout Button (Fixed) -->
+    <div class="logout-container">
+        <button class="btn btn-danger btn-block" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i>
+            Cerrar Sesión
+        </button>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/database.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/perfil.js"></script>
+</body>
+</html>

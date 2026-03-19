@@ -11,6 +11,11 @@
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('🌿 App de Recompensas - Cargada correctamente');
     
+    // Inicializar sistema de rutas (si existe)
+    if (typeof Routes !== 'undefined') {
+        Routes.init();
+    }
+    
     // Verificar autenticación
     if (Auth.isLoggedIn()) {
         const user = Auth.getCurrentUser();
@@ -208,7 +213,10 @@ function initBottomNav() {
         
         // Verificar si este item corresponde a la página actual
         const href = item.getAttribute('href');
-        if (href === currentPath || (href === '/' && currentPath === '/index.html')) {
+        const cleanHref = href === '/' ? '/' : href.replace(/\.html$/, '');
+        const cleanCurrent = currentPath.replace(/\.html$/, '');
+        
+        if (cleanHref === cleanCurrent || (cleanHref === '/' && cleanCurrent === '')) {
             item.classList.add('active');
         }
     });
@@ -218,7 +226,14 @@ function initBottomNav() {
         item.addEventListener('click', function(e) {
             // Solo manejar si no es el item activo
             if (!this.classList.contains('active')) {
-                console.log('📍 Navegando a:', this.getAttribute('href'));
+                const href = this.getAttribute('href');
+                console.log('📍 Navegando a:', href);
+                
+                // Usar sistema de rutas si está disponible
+                if (typeof Routes !== 'undefined' && Routes.config.useSPA) {
+                    e.preventDefault();
+                    Routes.navigate(href);
+                }
                 
                 // Feedback háptico
                 if (navigator.vibrate) {
