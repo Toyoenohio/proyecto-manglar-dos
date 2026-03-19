@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     await loadTasks();
     
     // Inicializar funcionalidades
-    initFilterButtons();
     initTaskActions();
     initBottomNav();
     initNotificationBtn();
@@ -48,9 +47,9 @@ async function loadUserData() {
 /**
  * Cargar tareas
  */
-async function loadTasks(filter = 'all') {
+async function loadTasks() {
     try {
-        console.log(`📋 Cargando tareas (filtro: ${filter})`);
+        console.log('📋 Cargando tareas');
         
         // Mostrar loading state
         showLoadingState();
@@ -59,19 +58,13 @@ async function loadTasks(filter = 'all') {
         // Por ahora, usaremos datos de ejemplo
         const tasks = getSampleTasks();
         
-        // Filtrar tareas si no es "all"
-        let filteredTasks = tasks;
-        if (filter !== 'all') {
-            filteredTasks = tasks.filter(task => task.status === filter);
-        }
-        
         // Actualizar estadísticas
-        updateStats(filteredTasks);
+        updateStats(tasks);
         
         // Renderizar tareas
-        renderTasks(filteredTasks);
+        renderTasks(tasks);
         
-        console.log(`✅ ${filteredTasks.length} tareas cargadas`);
+        console.log(`✅ ${tasks.length} tareas cargadas`);
     } catch (error) {
         console.error('❌ Error cargando tareas:', error);
         showError('Error cargando las tareas');
@@ -285,30 +278,6 @@ function getStatusText(status) {
 /**
  * Inicializar botones de filtro
  */
-function initFilterButtons() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Remover clase active de todos los botones
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            
-            // Agregar clase active al botón clickeado
-            this.classList.add('active');
-            
-            // Obtener filtro
-            const filter = this.dataset.filter;
-            
-            // Cargar tareas con el filtro seleccionado
-            loadTasks(filter);
-            
-            // Feedback háptico
-            if (navigator.vibrate) {
-                navigator.vibrate([10]);
-            }
-        });
-    });
-}
 
 /**
  * Inicializar acciones de tareas
@@ -364,9 +333,7 @@ function initTaskActions() {
                 : '🎉 ¡Tarea completada!', 'success');
             
             // Recargar tareas
-            const activeFilter = document.querySelector('.filter-btn.active');
-            const filter = activeFilter ? activeFilter.dataset.filter : 'all';
-            await loadTasks(filter);
+            await loadTasks();
             
         } catch (error) {
             console.error('❌ Error en acción de tarea:', error);

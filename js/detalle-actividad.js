@@ -64,7 +64,7 @@ async function loadActivityDetails(activityId) {
         // Ocultar estados de carga
         hideLoadingStates();
         
-        console.log('✅ Actividad cargada:', actividad.nombre);
+        console.log('✅ Actividad cargada:', actividad.titulo);
     } catch (error) {
         console.error('❌ Error cargando actividad:', error);
         showError('Error cargando los detalles de la actividad');
@@ -162,7 +162,7 @@ function updateHeroSection(actividad) {
     badge.innerHTML = icon;
     
     // Actualizar título
-    title.textContent = actividad.nombre;
+    title.textContent = actividad.titulo || actividad.nombre || 'Actividad';
     
     // Actualizar recompensa
     const rewardAmount = document.querySelector('.reward-amount');
@@ -183,7 +183,7 @@ function updateHeroSection(actividad) {
 function updateDescription(actividad) {
     const descElement = document.getElementById('activityDescription');
     if (descElement) {
-        descElement.textContent = actividad.descripcion || 'Sin descripción disponible';
+        descElement.textContent = actividad.descripcion_larga || actividad.descripcion_corta || 'Sin descripción disponible';
     }
 }
 
@@ -233,14 +233,14 @@ function updateSchedule(actividad) {
     // Lugar
     const locationElement = document.getElementById('activityLocation');
     if (locationElement) {
-        locationElement.textContent = actividad.lugar || 'Por confirmar';
+        locationElement.textContent = actividad.ubicacion || 'Por confirmar';
     }
     
     // Cupo
     const slotsElement = document.getElementById('activitySlots');
     if (slotsElement) {
-        const cupoMax = parseInt(actividad.cupo_maximo) || 0;
-        const cupoActual = parseInt(actividad.cupo_actual) || 0;
+        const cupoMax = parseInt(actividad.cupo_total) || 0;
+        const cupoActual = parseInt(actividad.cupo_inscritos) || 0;
         
         if (cupoMax > 0) {
             slotsElement.textContent = `${cupoActual}/${cupoMax} personas`;
@@ -255,8 +255,8 @@ function updateSchedule(actividad) {
  */
 function updateProgress(actividad) {
     // Progreso de participantes
-    const cupoMax = parseInt(actividad.cupo_maximo) || 0;
-    const cupoActual = parseInt(actividad.cupo_actual) || 0;
+    const cupoMax = parseInt(actividad.cupo_total) || 0;
+    const cupoActual = parseInt(actividad.cupo_inscritos) || 0;
     
     const progressFill = document.getElementById('participantsProgress');
     const progressText = document.getElementById('participantsText');
