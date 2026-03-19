@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Login - Colegio El Manglar</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4CAF50, #388E3C);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+        }
+        
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        
+        .login-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        
+        .form-input:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
+        }
+        
+        .form-input.error {
+            border-color: #E53E3E;
+            animation: shake 0.4s ease;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #4CAF50, #388E3C);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .error-message {
+            background: #FEE;
+            color: #E53E3E;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .error-message.show {
+            display: flex;
+        }
+        
+        .login-help {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .login-help-text {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .demo-credentials {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .demo-credentials code {
+            background: #e0e0e0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body data-public="true">
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-logo">🌿</div>
+            <h1 class="login-title">Colegio El Manglar</h1>
+            <p class="login-subtitle">Sistema de Recompensas Mangle Coins</p>
+        </div>
+        
+        <div class="error-message" id="errorMessage">
+            <span>⚠️</span>
+            <span id="errorText">Correo o PIN incorrectos</span>
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label class="form-label" for="email">Correo Institucional</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    class="form-input" 
+                    placeholder="tu.nombre@manglar.edu"
+                    required
+                    autocomplete="email"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="pin">PIN de Acceso</label>
+                <input 
+                    type="password" 
+                    id="pin" 
+                    class="form-input" 
+                    placeholder="••••"
+                    maxlength="4"
+                    pattern="[0-9]{4}"
+                    required
+                    autocomplete="off"
+                >
+            </div>
+            
+            <button type="submit" class="login-btn" id="loginBtn">
+                Ingresar
+            </button>
+        </form>
+        
+        <div class="login-help">
+            <p class="login-help-text">¿Olvidaste tu PIN? Contacta a administración</p>
+            <div class="demo-credentials">
+                <strong>Credenciales de prueba:</strong><br>
+                <code>alejandro@manglar.edu</code> PIN: <code>1234</code><br>
+                <code>gabriela@manglar.edu</code> PIN: <code>5678</code>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/database.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Verificar si ya está logueado (con timeout para evitar loops)
+        setTimeout(() => {
+            if (Auth.isLoggedIn()) {
+                console.log('✅ [LOGIN] Usuario ya autenticado, redirigiendo...');
+                
+                // Obtener parámetro de redirección
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirect = urlParams.get('redirect') || 'index.html';
+                
+                // Redirigir después de un pequeño delay
+                setTimeout(() => {
+                    window.location.href = redirect;
+                }, 500);
+            }
+        }, 100);
+        
+        // Función para mostrar error
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            
+            errorText.textContent = message;
+            errorMessage.classList.add('show');
+            
+            // Agregar clase de error a inputs
+            document.getElementById('email').classList.add('error');
+            document.getElementById('pin').classList.add('error');
+            
+            // Remover clase después de 3 segundos
+            setTimeout(() => {
+                document.getElementById('email').classList.remove('error');
+                document.getElementById('pin').classList.remove('error');
+            }, 3000);
+        }
+        
+        // Manejar el formulario de login
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const pin = document.getElementById('pin').value.trim();
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            
+            // Ocultar error previo
+            errorMessage.classList.remove('show');
+            
+            // Validar formato
+            if (!email.endsWith('@manglar.edu')) {
+                showError('El correo debe ser institucional (@manglar.edu)');
+                return;
+            }
+            
+            if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+                showError('El PIN debe tener 4 dígitos');
+                return;
+            }
+            
+            // Mostrar estado de carga
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<span class="loading-spinner"></span> Validando...';
+            
+            try {
+                // Intentar login
+                const user = await Auth.login(email, pin);
+                
+                if (user) {
+                    // Login exitoso
+                    loginBtn.innerHTML = '✅ ¡Bienvenido!';
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1000);
+                } else {
+                    // Login fallido
+                    showError('Correo o PIN incorrectos');
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Ingresar';
+                }
+            } catch (error) {
+                console.error('Error en login:', error);
+                showError('Error de conexión. Intenta de nuevo.');
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Ingresar';
+            }
+        });
+        
+        // Auto-focus en el campo de email
+        document.getElementById('email').focus();
+    </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 /**
  * ========================================
- * Proyecto Manglar Dos - Colegio El Manglar
+ * Proyecto Manglar Dos - App de Recompensas
  * Mobile-Only JavaScript
  * ========================================
  */
@@ -8,53 +8,230 @@
 // ========================================
 // Esperar a que el DOM esté cargado
 // ========================================
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🎓 Colegio El Manglar - App cargada correctamente');
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('🌿 App de Recompensas - Cargada correctamente');
+    
+    // Verificar autenticación
+    if (Auth.isLoggedIn()) {
+        const user = Auth.getCurrentUser();
+        console.log('✅ Usuario logueado:', user.nombre);
+        
+        // Actualizar UI con datos del usuario
+        await loadUserData(user);
+    }
     
     // Inicializar funcionalidades
     initBottomNav();
     initNotificationBtn();
-    initParticipateButtons();
-    initScrollAnimations();
+    initActivityCards();
     initBalanceActions();
 });
 
 // ========================================
-// Bottom Navigation
+// Carga de Datos Dinámicos
 // ========================================
-function initBottomNav() {
-    const navItems = document.querySelectorAll('.nav-item');
+
+/**
+ * Cargar datos del usuario en la UI
+ */
+async function loadUserData(user) {
+    try {
+        // Actualizar saludo
+        updateGreeting(user.nombre);
+        
+        // Cargar saldo del usuario
+        const saldo = await Database.calcularSaldoUsuario(user.id);
+        
+        // Cargar actividades disponibles
+        const actividades = await Database.getActividadesDisponibles();
+        
+        // Renderizar secciones
+        updateBalance(saldo);
+        renderActividades(actividades);
+        
+        console.log('✅ Datos cargados:', {
+            saldo: saldo,
+            actividades: actividades.length
+        });
+    } catch (error) {
+        console.error('❌ Error cargando datos:', error);
+        showError('Error cargando datos. Verifica tu conexión.');
+    }
+}
+
+/**
+ * Actualizar saludo con nombre del usuario
+ */
+function updateGreeting(nombre) {
+    const greetingElement = document.querySelector('.greeting-large');
+    if (greetingElement) {
+        greetingElement.textContent = `¡Hola, ${nombre}!`;
+    }
+}
+
+/**
+ * Actualizar saldo en la card
+ */
+function updateBalance(saldo) {
+    const balanceElement = document.querySelector('.amount-number');
+    if (balanceElement) {
+        balanceElement.textContent = saldo.toLocaleString('es-ES');
+    }
+}
+
+/**
+ * Renderizar actividades disponibles
+ */
+function renderActividades(actividades) {
+    const container = document.querySelector('.activities-list');
+    if (!container) return;
     
+    // Limpiar contenido estático
+    container.innerHTML = '';
+    
+    if (actividades.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <p>🎉 ¡No hay actividades disponibles por el momento!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Renderizar cards
+    actividades.forEach(actividad => {
+        const card = createActivityCard(actividad);
+        container.appendChild(card);
+    });
+}
+
+/**
+ * Crear card de actividad
+ */
+function createActivityCard(actividad) {
+    const card = document.createElement('div');
+    card.className = 'activity-card';
+    card.dataset.activityId = actividad.id;
+    
+    // Determinar clase CSS según tipo de actividad
+    const activityClass = getActivityClass(actividad.tipo);
+    const iconSVG = getActivityIcon(actividad.tipo);
+    
+    // Calcular progreso de cupo
+    const cupoMax = parseInt(actividad.cupo_maximo) || 0;
+    const cupoActual = parseInt(actividad.cupo_actual) || 0;
+    const progreso = cupoMax > 0 ? Math.round((cupoActual / cupoMax) * 100) : 0;
+    const cupoText = cupoMax > 0 ? `${cupoActual}/${cupoMax}` : 'Ilimitado';
+    
+    card.innerHTML = `
+        <div class="activity-image ${activityClass}">
+            <div class="reward-badge">+${actividad.recompensa_mc} MC</div>
+            <div class="activity-illustration">
+                ${iconSVG}
+            </div>
+        </div>
+        <div class="activity-content">
+            <h3 class="activity-title">${actividad.nombre}</h3>
+            <p class="activity-description">${actividad.descripcion}</p>
+            <div class="activity-slots">
+                <div class="slots-info">
+                    <span class="slots-label">CUPO DISPONIBLE</span>
+                    <span class="slots-value">${cupoText}</span>
+                </div>
+                ${cupoMax > 0 ? `
+                <div class="slots-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progreso}%"></div>
+                    </div>
+                </div>
+                ` : ''}
+            </div>
+            <button class="btn btn-primary btn-block" data-activity="${actividad.id}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                Participar
+            </button>
+        </div>
+    `;
+    
+    return card;
+}
+
+/**
+ * Obtener clase CSS para tipo de actividad
+ */
+function getActivityClass(tipo) {
+    const tipos = {
+        'limpieza': 'cleanup',
+        'tutoria': 'tutoring',
+        'reciclaje': 'recycling',
+        'deporte': 'sports',
+        'arte': 'art',
+        'musica': 'music'
+    };
+    
+    return tipos[tipo] || 'cleanup';
+}
+
+/**
+ * Obtener icono SVG para tipo de actividad
+ */
+function getActivityIcon(tipo) {
+    const icons = {
+        'limpieza': '<svg width="80" height="80" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.3)"/><rect x="35" y="45" width="30" height="35" rx="4" fill="white" opacity="0.9"/><circle cx="50" cy="35" r="12" fill="white" opacity="0.9"/><path d="M45 55L50 60L55 50" stroke="#4CAF50" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        'tutoria': '<svg width="80" height="80" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.3)"/><circle cx="50" cy="40" r="15" fill="white" opacity="0.9"/><rect x="35" y="60" width="30" height="20" rx="4" fill="white" opacity="0.9"/><path d="M40 65L45 70L55 60" stroke="#4CAF50" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        'reciclaje': '<svg width="80" height="80" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.3)"/><rect x="35" y="40" width="30" height="30" rx="4" fill="white" opacity="0.9"/><path d="M40 45L45 50L55 40" stroke="#4CAF50" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="50" cy="65" r="8" fill="white" opacity="0.9"/></svg>'
+    };
+    
+    return icons[tipo] || icons.limpieza;
+}
+
+// ========================================
+// Funcionalidades de UI
+// ========================================
+
+/**
+ * Inicializar navegación inferior
+ */
+function initBottomNav() {
+    console.log('🔧 Inicializando bottom navigation...');
+    
+    // Obtener la página actual
+    const currentPath = window.location.pathname;
+    
+    // Remover clase active de todos los items
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        item.classList.remove('active');
+        
+        // Verificar si este item corresponde a la página actual
+        const href = item.getAttribute('href');
+        if (href === currentPath || (href === '/' && currentPath === '/index.html')) {
+            item.classList.add('active');
+        }
+    });
+    
+    // Agregar event listeners para navegación
     navItems.forEach(item => {
         item.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Remover active de todos
-            navItems.forEach(nav => nav.classList.remove('active'));
-            
-            // Agregar active al actual
-            this.classList.add('active');
-            
-            // Feedback háptico (si está disponible en mobile)
-            if (navigator.vibrate) {
-                navigator.vibrate(10);
-            }
-            
-            // Navegación
-            const section = this.querySelector('span').textContent.toLowerCase();
-            console.log('📍 Navegando a:', section);
-            
-            // Ejemplo: scroll a diferentes secciones
-            if (section === 'inicio') {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Solo manejar si no es el item activo
+            if (!this.classList.contains('active')) {
+                console.log('📍 Navegando a:', this.getAttribute('href'));
+                
+                // Feedback háptico
+                if (navigator.vibrate) {
+                    navigator.vibrate([10]);
+                }
             }
         });
     });
 }
 
-// ========================================
-// Botón de Notificaciones
-// ========================================
+/**
+ * Inicializar botón de notificaciones
+ */
 function initNotificationBtn() {
     const notificationBtn = document.querySelector('.notification-btn');
     
@@ -67,119 +244,77 @@ function initNotificationBtn() {
                 navigator.vibrate([10, 30, 10]);
             }
             
-            // Mostrar notificaciones
-            showAlert('🔔 No tienes notificaciones nuevas', 'info');
+            showAlert('🔔 Sin notificaciones nuevas', 'info');
         });
     }
 }
 
-// ========================================
-// Botones de Participar
-// ========================================
-function initParticipateButtons() {
-    const participateBtns = document.querySelectorAll('.btn-participate');
-    
-    participateBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const activityCard = this.closest('.activity-card');
-            const activityTitle = activityCard.querySelector('.activity-title')?.textContent;
+/**
+ * Inicializar cards de actividades
+ */
+function initActivityCards() {
+    // Delegación de eventos para botones "Participar"
+    document.addEventListener('click', function(e) {
+        const participateBtn = e.target.closest('[data-activity]');
+        if (!participateBtn) return;
+        
+        const activityId = participateBtn.dataset.activity;
+        console.log('🎯 Participar en actividad:', activityId);
+        
+        // Feedback háptico
+        if (navigator.vibrate) {
+            navigator.vibrate([20]);
+        }
+        
+        // Mostrar confirmación
+        if (confirm('¿Querés participar en esta actividad?')) {
+            showAlert('✅ ¡Inscripción enviada! Revisá tu perfil para más detalles.', 'success');
             
-            console.log('📝 Participando en:', activityTitle);
+            // Deshabilitar botón temporalmente
+            participateBtn.disabled = true;
+            participateBtn.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Inscrito
+            `;
             
-            // Feedback háptico
-            if (navigator.vibrate) {
-                navigator.vibrate(20);
-            }
-            
-            // Simular inscripción
-            this.textContent = 'Inscrito ✓';
-            this.disabled = true;
-            this.style.backgroundColor = '#388E3C';
-            
-            // Actualizar barra de progreso
-            const progressBar = activityCard.querySelector('.progress-fill');
-            if (progressBar) {
-                const currentWidth = parseFloat(progressBar.style.width) || 0;
-                const newWidth = Math.min(currentWidth + 10, 100);
-                progressBar.style.width = newWidth + '%';
-            }
-            
-            // Actualizar cupo
-            const slotsValue = activityCard.querySelector('.slots-value');
-            if (slotsValue) {
-                const match = slotsValue.textContent.match(/(\d+)\s*\/\s*(\d+)/);
-                if (match) {
-                    const current = parseInt(match[1]) + 1;
-                    const total = match[2];
-                    slotsValue.textContent = `${current} / ${total} personas`;
-                }
-            }
-            
-            // Mostrar confirmación
-            showAlert(`✅ Te has inscrito en: ${activityTitle}`, 'success');
-        });
+            // Aquí iría la lógica para registrar la participación
+            // await Database.registrarParticipacion(userId, activityId);
+        }
     });
 }
 
-// ========================================
-// Botones de Saldo (Historial/Canjear)
-// ========================================
+/**
+ * Inicializar acciones de saldo
+ */
 function initBalanceActions() {
-    const balanceBtns = document.querySelectorAll('.balance-actions .btn');
-    
-    balanceBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const action = this.textContent.trim();
-            console.log('💰 Acción:', action);
-            
-            // Feedback háptico
-            if (navigator.vibrate) {
-                navigator.vibrate(15);
-            }
-            
-            if (action === 'Historial') {
-                showAlert('📜 Mostrando historial de Mangle Coins', 'info');
-            } else if (action === 'Canjear') {
-                showAlert('🎁 Abriendo tienda de recompensas', 'info');
-            }
+    // Botón Historial
+    const historyBtn = document.querySelector('.btn-outline:nth-child(1)');
+    if (historyBtn) {
+        historyBtn.addEventListener('click', function() {
+            console.log('📊 Historial de transacciones');
+            showAlert('📊 Historial disponible próximamente', 'info');
         });
-    });
-}
-
-// ========================================
-// Animaciones de Scroll
-// ========================================
-function initScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
+    }
     
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-                observer.unobserve(entry.target);
-            }
+    // Botón Canjear
+    const redeemBtn = document.querySelector('.btn-outline:nth-child(2)');
+    if (redeemBtn) {
+        redeemBtn.addEventListener('click', function() {
+            console.log('🛒 Redirigiendo a tienda...');
+            window.location.href = '/tienda';
         });
-    }, observerOptions);
-    
-    // Observar activity cards
-    const cards = document.querySelectorAll('.activity-card');
-    cards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = `opacity 0.4s ease ${index * 0.1}s, transform 0.4s ease ${index * 0.1}s`;
-        observer.observe(card);
-    });
+    }
 }
 
 // ========================================
 // Utilidades
 // ========================================
 
-// Mostrar alertas toast
+/**
+ * Mostrar alerta toast
+ */
 function showAlert(message, type = 'info') {
     // Remover alertas existentes
     const existingAlert = document.querySelector('.toast-alert');
@@ -192,10 +327,10 @@ function showAlert(message, type = 'info') {
     alertDiv.className = `toast-alert toast-${type}`;
     alertDiv.textContent = message;
     
-    // Colores según tipo
+    // Estilos
     const bgColor = type === 'success' ? '#4CAF50' : 
                     type === 'error' ? '#E53E3E' : 
-                    '#4CAF50';
+                    '#2196F3';
     
     alertDiv.style.cssText = `
         position: fixed;
@@ -227,6 +362,13 @@ function showAlert(message, type = 'info') {
     }, 2500);
 }
 
+/**
+ * Mostrar error
+ */
+function showError(message) {
+    showAlert(message, 'error');
+}
+
 // Agregar animaciones CSS dinámicamente
 const style = document.createElement('style');
 style.textContent = `
@@ -252,136 +394,42 @@ style.textContent = `
         }
     }
     
-    @keyframes pulse {
-        0%, 100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.05);
-        }
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #666;
+        font-size: 14px;
+        grid-column: 1 / -1;
+    }
+    
+    .toast-alert {
+        position: fixed;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #4CAF50;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 24px;
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        animation: slideDown 0.3s ease;
+        max-width: 90%;
+        text-align: center;
+    }
+    
+    .toast-success {
+        background-color: #4CAF50;
+    }
+    
+    .toast-error {
+        background-color: #E53E3E;
+    }
+    
+    .toast-info {
+        background-color: #2196F3;
     }
 `;
 document.head.appendChild(style);
-
-// ========================================
-// Funciones adicionales para el futuro
-// ========================================
-
-// Actualizar saldo
-function updateBalance(newBalance) {
-    const amountNumber = document.querySelector('.amount-number');
-    if (amountNumber) {
-        // Animación de actualización
-        amountNumber.style.transform = 'scale(1.1)';
-        amountNumber.style.transition = 'transform 0.2s ease';
-        
-        setTimeout(() => {
-            amountNumber.textContent = newBalance.toLocaleString('es-ES');
-            amountNumber.style.transform = 'scale(1)';
-        }, 200);
-    }
-}
-
-// Agregar nueva actividad
-function addActivity(data) {
-    const section = document.querySelector('.section');
-    const activitiesContainer = section.querySelector('.link-view-all').parentElement;
-    
-    if (section) {
-        const newCard = document.createElement('div');
-        newCard.className = 'activity-card';
-        newCard.innerHTML = `
-            <div class="activity-image ${data.imageClass || 'cleanup'}">
-                <div class="reward-badge">+${data.reward} MC</div>
-                <div class="activity-illustration">
-                    ${data.illustrationSVG || '<svg width="80" height="80" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.3)"/></svg>'}
-                </div>
-            </div>
-            <div class="activity-content">
-                <h3 class="activity-title">${data.title}</h3>
-                <p class="activity-description">${data.description}</p>
-                <div class="activity-slots">
-                    <span class="slots-label">CUPO</span>
-                    <span class="slots-value">${data.currentSlots} / ${data.totalSlots} personas</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: ${(data.currentSlots / data.totalSlots) * 100}%;"></div>
-                </div>
-                <button class="btn btn-participate">Participar</button>
-            </div>
-        `;
-        
-        // Insertar antes del bottom-spacer
-        const spacer = section.querySelector('.bottom-spacer');
-        section.insertBefore(newCard, spacer);
-        
-        // Re-inicializar botones
-        initParticipateButtons();
-        
-        // Scroll automático para mostrar la nueva card
-        newCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-}
-
-// Actualizar cupo de una actividad
-function updateSlots(activityIndex, newCurrent, newTotal) {
-    const cards = document.querySelectorAll('.activity-card');
-    if (cards[activityIndex]) {
-        const slotsValue = cards[activityIndex].querySelector('.slots-value');
-        const progressBar = cards[activityIndex].querySelector('.progress-fill');
-        
-        if (slotsValue) {
-            slotsValue.textContent = `${newCurrent} / ${newTotal} personas`;
-        }
-        
-        if (progressBar) {
-            const percentage = (newCurrent / newTotal) * 100;
-            progressBar.style.width = percentage + '%';
-        }
-    }
-}
-
-// Marcar actividad como completada
-function completeActivity(activityIndex) {
-    const cards = document.querySelectorAll('.activity-card');
-    if (cards[activityIndex]) {
-        const btn = cards[activityIndex].querySelector('.btn-participate');
-        const progressBar = cards[activityIndex].querySelector('.progress-fill');
-        
-        if (btn) {
-            btn.textContent = 'Completado ✓';
-            btn.disabled = true;
-            btn.style.backgroundColor = '#CCCCCC';
-        }
-        
-        if (progressBar) {
-            progressBar.style.width = '100%';
-        }
-    }
-}
-
-// ========================================
-// Service Worker Register (para PWA)
-// ========================================
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        // navigator.serviceWorker.register('/sw.js').then(function(registration) {
-        //     console.log('ServiceWorker registration successful:', registration.scope);
-        // }, function(err) {
-        //     console.log('ServiceWorker registration failed:', err);
-        // });
-    });
-}
-
-// ========================================
-// Online/Offline Detection
-// ========================================
-window.addEventListener('online', function() {
-    console.log('🌐 Online');
-    showAlert('🌐 Conexión restablecida', 'success');
-});
-
-window.addEventListener('offline', function() {
-    console.log('❌ Offline');
-    showAlert('❌ Sin conexión', 'error');
-});
